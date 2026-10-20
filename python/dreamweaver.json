@@ -1,1 +1,1 @@
-{"protocol":"dreamweaver.v1","runtime":"python312","name":"Python courier","entrypoint":"bot.py"}
+{"protocol":"dreamweaver.v2","runtime":"python312","name":"Python courier","entrypoint":"bot.py"}

@@ -1,8 +1,8 @@
 {
   "type": "observation",
   "observation": {
-    "protocol": "dreamweaver.v1",
-    "ruleset": "dream-relay.0.1",
+    "protocol": "dreamweaver.v2",
+    "ruleset": "dream-relay.0.2",
     "matchId": "local-protocol-check",
     "tick": 20,
     "duration": 3600,
@@ -22,7 +22,12 @@
         0,
         0,
         0
-      ]
+      ],
+      "respawnUntil": 0,
+      "recoveryUntil": 0,
+      "depositUntil": 0,
+      "facingX": 1,
+      "facingZ": 0
     },
     "opponent": {
       "seat": 1,
@@ -39,28 +44,40 @@
         0,
         0,
         0
-      ]
+      ],
+      "respawnUntil": 0,
+      "recoveryUntil": 0,
+      "depositUntil": 0,
+      "facingX": -1,
+      "facingZ": 0
     },
     "beacon": {
       "x": 12,
-      "z": 12
+      "z": 12,
+      "multiplier": 1,
+      "bonusAt": 280,
+      "movesAt": 400
     },
     "nodes": [
       {
         "x": 4,
-        "z": 4
+        "z": 4,
+        "readyAt": 0
       },
       {
         "x": 20,
-        "z": 20
+        "z": 20,
+        "readyAt": 0
       },
       {
         "x": 4,
-        "z": 20
+        "z": 20,
+        "readyAt": 0
       },
       {
         "x": 20,
-        "z": 4
+        "z": 4,
+        "readyAt": 0
       }
     ],
     "hazard": {
@@ -68,6 +85,7 @@
       "warnUntil": 0,
       "activeUntil": 0
     },
-    "blocks": []
+    "blocks": [],
+    "loot": []
   }
 }
