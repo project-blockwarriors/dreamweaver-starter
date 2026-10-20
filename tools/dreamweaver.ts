@@ -24,7 +24,7 @@ try {
       console.log(
         JSON.stringify({
           node: process.version,
-          protocol: 'dreamweaver.v1',
+          protocol: 'dreamweaver.v2',
           endpoint: url,
           tokenConfigured: !!process.env.DREAMWEAVER_TOKEN,
         }),

@@ -4,6 +4,8 @@ Build one Minecraft arena bot with your team. Write the strategy yourself, use a
 
 **Prototype:** the rules and runtime limits are being tested for Spring 2027. Dates, eligibility, travel and prizes are not final. [Open the competition workspace](https://mcpanel.blockwarriors.ai/dreamweaver/#Workspace).
 
+For an asynchronous Jev policy with pathfinding and fallback, use the [Jev starter template](https://github.com/project-blockwarriors/dreamweaver-jev-starter).
+
 ## Start a bot
 
 Choose **Use this template → Create a new repository**. Keep your competition repository private. A team has one bot and up to four students.
@@ -62,15 +64,15 @@ Each match lasts 180 seconds (3,600 server ticks). Your bot moves on a 25 × 25 
 
 | Slot | Ability | Effect |
 | --- | --- | --- |
-| 1 | Harvest / deliver | Collect within one cell of a source, or deliver at the uncontested beacon. Carry up to three crystals. |
+| 1 | Harvest / deliver | Collect within one cell of a source, or channel for 0.6 seconds at the beacon. Carry up to three crystals. |
 | 2 | Dash | Move up to three extra cells in the chosen direction; three-second cooldown. |
 | 3 | Ward | Spend one flux for a one-second shield; two-second cooldown. |
 | 4 | Weave | Spend one flux to place a five-second barrier in the adjacent cell; one-second cooldown. |
-| 5 | Disrupt | Damage and briefly interrupt an unshielded opponent within three cells; three-second cooldown. |
+| 5 | Disrupt | Damage, interrupt and push an unshielded opponent within three cells; three-second cooldown. |
 
-Deliveries score **10 points per crystal**. Uncontested beacon control scores **1 point per five seconds**. Eliminations have no point reward. A bot has three health; on defeat it drops its cargo and respawns at its entry. Crystal collection restores flux up to six.
+Deliveries score **10 points per crystal**, or **15** during the last six seconds of each beacon phase. Damage or movement interrupts a deposit; passive camping does not block it. Eliminations have no point reward. A bot has three health; on defeat it drops its cargo and respawns at its entry. Crystal collection restores flux up to six.
 
-The beacon moves every 30 seconds. Hazard columns are announced one second before they become active. Legal building, collisions and cooldowns are checked by the server. A separate eight-tick ability gate prevents rapid switching from bypassing activation timing. The observation includes the opponent's position and state.
+The beacon moves every 20 seconds, with its next position announced five seconds in advance. Hazard columns are announced 0.8 seconds before they become active. Woven barriers block Disrupt line of sight. Dropped cargo can be recovered by either bot. Legal building, collisions and cooldowns are checked by the server. A separate eight-tick ability gate prevents rapid switching from bypassing activation timing. The observation includes the opponent's position and state.
 
 ## Protocol and limits
 

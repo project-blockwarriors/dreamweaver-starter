@@ -2,7 +2,7 @@ import { readFileSync, existsSync } from 'node:fs';
 import { spawnSync } from 'node:child_process';
 import assert from 'node:assert/strict';
 const manifest=JSON.parse(readFileSync('dreamweaver.json','utf8'));
-assert.equal(manifest.protocol,'dreamweaver.v1');
+assert.equal(manifest.protocol,'dreamweaver.v2');
 assert(['node24','python312'].includes(manifest.runtime),'Unsupported runtime');
 assert(/^[a-zA-Z0-9_./-]{1,120}$/.test(manifest.entrypoint)&&!manifest.entrypoint.startsWith('/')&&!manifest.entrypoint.split('/').includes('..'),'Entrypoint must stay in the repository');
 assert(existsSync(manifest.entrypoint),'Entrypoint missing');
