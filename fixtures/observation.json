@@ -16,7 +16,13 @@
       "flux": 3,
       "score": 0,
       "wardUntil": 0,
-      "cooldowns": [0, 0, 0, 0, 0],
+      "cooldowns": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
       "respawnUntil": 0,
       "recoveryUntil": 0,
       "depositUntil": 0,
@@ -32,7 +38,13 @@
       "flux": 3,
       "score": 0,
       "wardUntil": 0,
-      "cooldowns": [0, 0, 0, 0, 0],
+      "cooldowns": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
       "respawnUntil": 0,
       "recoveryUntil": 0,
       "depositUntil": 0,
@@ -43,8 +55,6 @@
       "x": 12,
       "z": 8,
       "multiplier": 1,
-      "bonusAt": 280,
-      "movesAt": 400,
       "depositTicks": 24,
       "fullLoadBonus": 10
     },
@@ -52,22 +62,37 @@
       {
         "x": 4,
         "z": 4,
-        "readyAt": 0
+        "readyAt": 0,
+        "yield": 1,
+        "replenishTicks": 80
       },
       {
         "x": 20,
         "z": 20,
-        "readyAt": 0
+        "readyAt": 0,
+        "yield": 1,
+        "replenishTicks": 80
       },
       {
         "x": 4,
         "z": 20,
-        "readyAt": 0
+        "readyAt": 0,
+        "yield": 1,
+        "replenishTicks": 80
       },
       {
         "x": 20,
         "z": 4,
-        "readyAt": 0
+        "readyAt": 0,
+        "yield": 1,
+        "replenishTicks": 80
+      },
+      {
+        "x": 12,
+        "z": 12,
+        "readyAt": 100,
+        "yield": 2,
+        "replenishTicks": 240
       }
     ],
     "hazard": {

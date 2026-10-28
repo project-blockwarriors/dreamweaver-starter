@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 import { readFile, writeFile } from 'node:fs/promises';
+import { evaluate, compare } from './evaluation.mjs';
 const [command, ...args] = process.argv.slice(2);
 const url = process.env.DREAMWEAVER_URL ?? 'https://mcpanel.blockwarriors.ai/dreamweaver';
 const endpoint = new URL(url);
@@ -49,6 +50,13 @@ try {
       });
       break;
     }
+    case 'evaluate':
+      show(await evaluate(args[0], args[1], request));
+      break;
+    case 'compare':
+      if (!args[0] || !args[1]) throw Error('Usage: compare BEFORE.json AFTER.json');
+      show(compare(JSON.parse(await readFile(args[0], 'utf8')), JSON.parse(await readFile(args[1], 'utf8'))));
+      break;
     case 'status':
       show(await request('/api/jobs'));
       break;
@@ -114,7 +122,7 @@ try {
     }
     default:
       console.log(
-        'Dreamweaver: doctor [MANIFEST] | link OWNER/REPO | submit TAG | select ID [qualifier|finals] | practice ID [OPPONENT] [SEED] [SEAT] | status | inspect RUN_ID | cancel RUN_ID | repeat RUN_ID [REVISION] | download RUN_ID FILE',
+        'Dreamweaver: evaluate ID RESULTS.json | compare BEFORE.json AFTER.json | doctor [MANIFEST] | link OWNER/REPO | submit TAG | select ID [qualifier|finals] | practice ID [OPPONENT] [SEED] [SEAT] | status | inspect RUN_ID | cancel RUN_ID | repeat RUN_ID [REVISION] | download RUN_ID FILE',
       );
   }
 } catch (e) {

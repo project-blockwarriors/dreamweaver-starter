@@ -1,0 +1,5 @@
+{
+  "opponents": ["courier", "guardian", "raider"],
+  "seeds": [42],
+  "note": "Six hosted games, one at a time, both seats. Uses practice/model allowance. Use additional held-out seeds after tuning."
+}
