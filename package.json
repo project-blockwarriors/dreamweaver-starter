@@ -1,12 +1,6 @@
 {
-  "name": "dreamweaver-starter",
+  "name": "dreamweaver-courier",
   "private": true,
   "type": "module",
-  "scripts": {
-    "check": "node tools/check.mjs",
-    "doctor": "node tools/dreamweaver.ts doctor"
-  },
-  "engines": {
-    "node": ">=24"
-  }
+  "version": "0.1.0"
 }
