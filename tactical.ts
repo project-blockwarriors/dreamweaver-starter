@@ -68,7 +68,7 @@ function supplyCost(o: Observation, node: Observation['nodes'][number]) {
   return (distance(o.self, node) + Math.max(0, (node.readyAt ?? 0) - o.tick) / 4 + 8) / yieldCount;
 }
 function coreNode(o: Observation) {
-  return o.nodes.find((node) => (node.yield ?? 1) > 1);
+  return o.nodes.find((node) => (node.yield ?? 1) === (o.ruleset === 'dream-relay.0.6' ? 3 : 2));
 }
 function supplyChoice(o: Observation): Tactic {
   const core = coreNode(o);
@@ -209,7 +209,7 @@ export function execute(o: Observation, tactic: Tactic, targetOverride?: Point, 
       radius = 0;
     } else
       target =
-        o.nodes.filter((n) => (n.yield ?? 1) === 1).sort((a, b) => supplyCost(o, a) - supplyCost(o, b))[0] ??
+        o.nodes.filter((n) => n !== coreNode(o)).sort((a, b) => supplyCost(o, a) - supplyCost(o, b))[0] ??
         o.beacon;
   }
   if (targetOverride) {
@@ -241,13 +241,16 @@ export function question(o: Observation, plan?: StrategicPlan | null) {
   const available = options(o);
   const descriptions: Record<Tactic, string> = {
     bank: o.beacon.fullLoadBonus
-      ? 'Deliver at the fixed shrine: hold still for 24 ticks (1.2 seconds). One/two/three crystals score 10/20/40. Movement or damage cancels the channel; Ward and cover preserve it.'
+      ? `Deliver at the fixed shrine: hold still for ${o.beacon.depositTicks ?? 24} ticks (${(o.beacon.depositTicks ?? 24) / 20} seconds). One/two/three crystals score 10/20/${30 + o.beacon.fullLoadBonus}. Movement or damage cancels the channel; Ward and cover preserve it.`
       : 'Deliver current cargo at the beacon. A 12-tick stationary channel earns 10 per crystal, or 15 during bonus. Damage/movement cancels it. Passive opponents do not block it.',
     collect:
-      'Take the outer single-crystal supplies or recover dropped cargo. Less direct competition, longer travel to the beacon. Carry up to 3; harvest grants flux.',
-    contest: o.beacon.fullLoadBonus
-      ? 'Race for the center core: two crystals, first ready at tick 100, then refills 240 ticks after harvest. Capacity three; excess yield is lost. Compare arrival times and refill before committing.'
-      : 'Take the shared center source: two crystals per harvest, refills every 200 ticks (10 seconds). First available at tick 100. Both bots can race for it. Consider arrival time, remaining cooldown and opponent; do not wait there when outer supplies are faster.',
+      'Take a flank source or recover dropped cargo. Read each source yield and readyAt; carry up to 3, excess yield is lost. Harvest grants flux.',
+    contest:
+      o.ruleset === 'dream-relay.0.6'
+        ? 'Race for the north cache at (12,4): three crystals, first ready at tick 300, then refills 900 ticks after harvest. Four flank sources give two each and refill in 160 ticks. Camping the cache sacrifices reliable flank income. Compare arrival times and remaining capacity.'
+        : o.beacon.fullLoadBonus
+          ? 'Race for the center core: two crystals, first ready at tick 100, then refills 240 ticks after harvest. Capacity three; excess yield is lost. Compare arrival times and refill before committing.'
+          : 'Take the shared center source: two crystals per harvest, refills every 200 ticks (10 seconds). First available at tick 100. Both bots can race for it. Consider arrival time, remaining cooldown and opponent; do not wait there when outer supplies are faster.',
     intercept:
       (o.beacon.fullLoadBonus
         ? 'A successful hit spills one carried crystal. The victim cannot recover it for 20 ticks; either bot can then collect it. Bank stolen cargo to score. '
@@ -257,6 +260,7 @@ export function question(o: Observation, plan?: StrategicPlan | null) {
         'dream-relay.0.3-preview',
         'dream-relay.0.4-player-preview',
         'dream-relay.0.5-strategy-preview',
+        'dream-relay.0.6',
       ].includes(o.ruleset)
         ? 'Telegraphs for 10 ticks (0.5 seconds); movement or damage cancels our charge. Opponents can dodge, ward or weave before it fires.'
         : 'Fires immediately.'),
@@ -270,6 +274,7 @@ export function question(o: Observation, plan?: StrategicPlan | null) {
         'dream-relay.0.3-preview',
         'dream-relay.0.4-player-preview',
         'dream-relay.0.5-strategy-preview',
+        'dream-relay.0.6',
       ].includes(o.ruleset)
         ? 'Preserves an active delivery channel; useful against repeated attacks while banking.'
         : 'Cancels an active delivery channel; use before banking.'),
@@ -302,7 +307,7 @@ export function question(o: Observation, plan?: StrategicPlan | null) {
         type: 'choice',
         instructions:
           (o.beacon.fullLoadBonus
-            ? 'Compare banking small loads now with combining supplies for the 40-point full-load reward. Avoid waiting at a source whose refill or opponent arrival makes another route better. '
+            ? `Compare banking now with combining supplies for a ${30 + o.beacon.fullLoadBonus}-point full load. Avoid waiting at a source whose refill or opponent arrival makes another route better. `
             : 'Deliver cargo frequently. ') +
           'Select the most useful available tactic for the next half-second. Prefer collection over aimless combat. Defend a threatened channel; avoid hazards. React to a charged enemy pulse with cover, shield or escape before it fires. Consider bonus timing, cooldowns, health, cargo and opponent behavior. Do not chase an invulnerable opponent.',
         criteria: Object.fromEntries(available.map((k) => [k, descriptions[k]])),

@@ -43,7 +43,7 @@ export function skills(o: Observation, memory: Memory, settings: Config, plan: P
   if (me.cargo > 0)
     result.push({
       id: 'bank',
-      description: `Bank ${me.cargo} crystals for ${me.cargo * 10 + (me.cargo === 3 ? 10 : 0)} points.`,
+      description: `Bank ${me.cargo} crystals for ${me.cargo * 10 + (me.cargo === 3 ? (o.beacon.fullLoadBonus ?? 0) : 0)} points.`,
       value:
         me.cargo >= bankAt || urgent || me.health === 1 || plan?.goal === 'recover'
           ? 100
@@ -58,8 +58,8 @@ export function skills(o: Observation, memory: Memory, settings: Config, plan: P
       const amount = Math.min(n.yield ?? 1, 3 - me.cargo);
       const raced =
         foe.cargo < 3 && (foe.respawnUntil ?? 0) <= o.tick && distance(foe, n) + 2 < distance(me, n);
-      const cost = travel + wait + distance(n, o.beacon) * 4 + 24;
-      const reward = 10 * amount + (me.cargo + amount === 3 ? 10 : 0);
+      const cost = travel + wait + distance(n, o.beacon) * 4 + (o.beacon.depositTicks ?? 24);
+      const reward = 10 * amount + (me.cargo + amount === 3 ? (o.beacon.fullLoadBonus ?? 0) : 0);
       const id = `source:${n.x}:${n.z}`;
       // Abandon a route that made no physical progress; channels are handled by reflex().
       const stuck = memory.selected === id && o.tick - memory.stationarySince > 40 && distance(me, n) > 1;

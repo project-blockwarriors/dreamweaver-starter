@@ -2,7 +2,7 @@
   "type": "observation",
   "observation": {
     "protocol": "dreamweaver.v4",
-    "ruleset": "dream-relay.0.5-strategy-preview",
+    "ruleset": "dream-relay.0.6",
     "matchId": "local-protocol-check",
     "tick": 20,
     "duration": 3600,
@@ -53,46 +53,46 @@
     },
     "beacon": {
       "x": 12,
-      "z": 8,
+      "z": 12,
       "multiplier": 1,
       "depositTicks": 24,
-      "fullLoadBonus": 10
+      "fullLoadBonus": 5
     },
     "nodes": [
       {
         "x": 4,
         "z": 4,
         "readyAt": 0,
-        "yield": 1,
-        "replenishTicks": 80
+        "yield": 2,
+        "replenishTicks": 160
       },
       {
         "x": 20,
         "z": 20,
         "readyAt": 0,
-        "yield": 1,
-        "replenishTicks": 80
+        "yield": 2,
+        "replenishTicks": 160
       },
       {
         "x": 4,
         "z": 20,
         "readyAt": 0,
-        "yield": 1,
-        "replenishTicks": 80
+        "yield": 2,
+        "replenishTicks": 160
       },
       {
         "x": 20,
         "z": 4,
         "readyAt": 0,
-        "yield": 1,
-        "replenishTicks": 80
+        "yield": 2,
+        "replenishTicks": 160
       },
       {
         "x": 12,
-        "z": 12,
-        "readyAt": 100,
-        "yield": 2,
-        "replenishTicks": 240
+        "z": 4,
+        "readyAt": 300,
+        "yield": 3,
+        "replenishTicks": 900
       }
     ],
     "hazard": {
