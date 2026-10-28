@@ -21,11 +21,17 @@ messages[1].observation.tick = 24;
 messages[1].observation.self.cargo = 2;
 messages[2].observation.tick = 28;
 messages[2].observation.hazard = { x: 2, warnUntil: 36, activeUntil: 64 };
+const opening = structuredClone(fixture);
+opening.observation.tick = 0;
+opening.observation.status = 'idle';
 const output = spawnSync(
   manifest.runtime === 'node24' ? process.execPath : 'python3',
   [manifest.entrypoint],
   {
-    input: messages.map((m) => JSON.stringify(m)).join('\n') + '\n',
+    input:
+      [{ type: 'prepare', version: 1, nonce: 'local-protocol-check' }, opening, ...messages]
+        .map((m) => JSON.stringify(m))
+        .join('\n') + '\n',
     encoding: 'utf8',
     timeout: 5000,
     maxBuffer: 1024 * 1024,
@@ -33,18 +39,27 @@ const output = spawnSync(
 );
 assert.ifError(output.error);
 assert.equal(output.status, 0, output.stderr);
+const replies = output.stdout
+  .trim()
+  .split('\n')
+  .map((l) => JSON.parse(l));
+assert.deepEqual(
+  replies[0],
+  { type: 'ready', version: 1, nonce: 'local-protocol-check' },
+  'Acknowledge prepare after initializing your agent, before emitting actions or model requests',
+);
 const actions = output.stdout
   .trim()
   .split('\n')
   .map((l) => JSON.parse(l))
   .filter((m) => m.type === 'action')
   .map((m) => m.action);
-assert(actions.length >= 3, 'Return an action for each observation');
+assert(actions.length >= 4, 'Return an action for each observation');
 let seq = -1;
 for (const action of actions) {
   assert(Number.isInteger(action.seq) && action.seq > seq, 'Sequence must increase');
   seq = action.seq;
-  assert([20, 24, 28].includes(action.observedTick), 'Use the observation tick');
+  assert([0, 20, 24, 28].includes(action.observedTick), 'Use the observation tick');
   for (const axis of ['dx', 'dz'])
     assert(Number.isInteger(action[axis]) && Math.abs(action[axis]) <= 1, `Invalid ${axis}`);
   assert(Number.isInteger(action.slot) && action.slot >= 1 && action.slot <= 5, 'Invalid hotbar slot');
