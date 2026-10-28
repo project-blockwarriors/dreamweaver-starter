@@ -9,6 +9,7 @@ export class Harness {
   memory = new Memory();
   models: Models;
   settings: Config;
+  intent: { id: string; until: number; cargo: number; source: string } | null = null;
   seq = 0;
   tick = 0;
   lastTrace = -100;
@@ -30,6 +31,7 @@ export class Harness {
     if (o.protocol !== 'dreamweaver.v4') throw Error('Expected dreamweaver.v4');
     if (o.matchId !== this.memory.matchId) {
       this.models.reset();
+      this.intent = null;
       this.choice = null;
       this.plan = null;
       this.lastTrace = -100;
@@ -43,7 +45,23 @@ export class Harness {
     const emergency = reflex(o);
     const chosen =
       this.settings.mode !== 'scripted' && this.choice ? choices.find((s) => s.id === this.choice!.id) : null;
-    const selected = chosen ?? choices[0]!;
+    const committed =
+      this.intent &&
+      this.intent.until > o.tick &&
+      this.intent.cargo === o.self.cargo &&
+      o.tick - this.memory.stationarySince <= 40
+        ? choices.find((s) => s.id === this.intent!.id)
+        : null;
+    const selected = committed ?? chosen ?? choices[0]!;
+    const source = committed ? this.intent!.source : chosen ? 'jev' : 'local';
+    if (emergency) this.intent = null;
+    else if (!committed)
+      this.intent = {
+        id: selected.id,
+        until: o.tick + this.settings.commitmentTicks,
+        cargo: o.self.cargo,
+        source,
+      };
     const action = emergency?.action ?? selected.run(o);
     action.seq = ++this.seq;
     action.observedTick = o.tick;
@@ -69,7 +87,7 @@ export class Harness {
         ? {
             tick: o.tick,
             skill: this.memory.selected,
-            source: emergency ? 'reflex' : chosen ? 'jev' : 'local',
+            source: emergency ? 'reflex' : source,
             plan: this.plan?.value ?? null,
             lead: o.self.score - o.opponent.score,
             cargo: o.self.cargo,

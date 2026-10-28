@@ -41,7 +41,7 @@ test('accepted skill executes only while still feasible; duplicate/foreign repli
   const o = obs(24);
   o.self.cargo = 3;
   const result = h.step(o);
-  assert.equal(h.memory.selected, 'bank');
+  assert.match(h.memory.selected, /bank/);
   assert.equal(result.action.observedTick, 24);
 });
 test('provider error, invalid choice and missing response retain a working local policy', () => {
@@ -125,7 +125,23 @@ test('endgame banks partial loads and a running channel is not interrupted by st
   o.self.z = 9;
   const h = new Harness(settings('scripted'));
   const result = h.step(o);
-  assert.equal(h.memory.selected, 'bank');
+  assert.match(h.memory.selected, /bank/);
   assert.equal(result.action.activate, true);
   assert.equal(result.action.dx, 0);
+});
+
+test('route commitment prevents model jitter but cargo changes release the intent', () => {
+  const h = new Harness(settings(), () => 0);
+  const a = h.step(obs());
+  const request = a.requests[0] as any;
+  const first = h.memory.selected;
+  const other = Object.keys(request.questions.skill.criteria).find((id) => id !== first)!;
+  h.respond(reply(request.requestId, other));
+  h.step(obs(24));
+  assert.equal(h.memory.selected, first);
+  const loaded = obs(28);
+  loaded.self.cargo = 3;
+  h.step(loaded);
+  assert.match(h.memory.selected, /bank/);
+  assert.equal(h.intent, null);
 });

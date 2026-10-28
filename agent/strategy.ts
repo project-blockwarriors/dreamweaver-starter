@@ -27,6 +27,8 @@ export function reflex(o: Observation): { action: Action; reason: string } | nul
   if ((o.self.respawnUntil ?? 0) > o.tick) return { action: execute(o, 'bank'), reason: 'respawning' };
   if ((o.self.depositUntil ?? 0) > o.tick) return { action: execute(o, 'bank'), reason: 'finish delivery' };
   if ((o.self.pulseUntil ?? 0) > o.tick) return { action: execute(o, 'intercept'), reason: 'finish disrupt' };
+  if (o.self.cargo > 0 && (o.self.cargo === 3 || o.duration - o.tick < distance(o.self, o.beacon) * 12 + 100))
+    return { action: execute(o, 'bank'), reason: 'bank before timeout' };
   return null;
 }
 
@@ -52,6 +54,7 @@ export function skills(o: Observation, memory: Memory, settings: Config, plan: P
     for (const n of o.nodes) {
       const travel = distance(me, n) * 4;
       const wait = Math.max(0, (n.readyAt ?? 0) - o.tick - travel);
+      if (wait > 40) continue; // Reconsider later; do not send the model to camp an unavailable source.
       const amount = Math.min(n.yield ?? 1, 3 - me.cargo);
       const raced =
         foe.cargo < 3 && (foe.respawnUntil ?? 0) <= o.tick && distance(foe, n) + 2 < distance(me, n);

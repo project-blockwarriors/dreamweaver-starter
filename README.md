@@ -33,7 +33,7 @@ Start with a hypothesis: “bank two crystals when an attacker is nearby,” “
 
 `agent/config.ts` defaults to `mode: 'scripted'` (no model calls). Use `scripted` to measure your code alone, or `hybrid` for a slow Claude planner alongside Jev. Commit this setting; hosted games do not receive your development shell variables. The planner chooses a short-lived goal, stance and banking threshold; Jev chooses a current skill; code handles danger and movement. Claude availability and model selection belong to the organizer. If either provider is unavailable, the local policy keeps playing.
 
-Memory resets each match. Responses are matched to request IDs, expire by wall time and game ticks, and are revalidated against current skills. Plans cannot override immediate defense or stop the observation loop. Tests use fake model responses; they do not prove model quality.
+Routes have a configurable two-second commitment to avoid model-driven oscillation; changed cargo, blocked progress, unavailable skills or immediate danger can interrupt it. Full cargo and a conservative endgame travel estimate trigger banking. Memory resets each match. Responses are matched to request IDs, expire by wall time and game ticks, and are revalidated against current skills. Plans cannot override immediate defense or stop the observation loop. Tests use fake model responses; they do not prove model quality.
 
 ## Submit and practice
 
