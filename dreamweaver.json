@@ -1,1 +1,1 @@
-{"protocol":"dreamweaver.v2","runtime":"node24","name":"Courier starter","entrypoint":"bot.mjs"}
+{ "protocol": "dreamweaver.v4", "runtime": "node24", "name": "Courier starter", "entrypoint": "bot.mjs" }

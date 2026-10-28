@@ -1,17 +1,13 @@
-"""Dependency-free Python starter; stdout is reserved for protocol messages."""
 import json,sys
-
-def sign(value): return (value>0)-(value<0)
 for line in sys.stdin:
     message=json.loads(line)
-    if message.get('type')!='observation': continue
-    o=message['observation'];bot=o['self']
-    def distance(p): return abs(p['x']-bot['x'])+abs(p['z']-bot['z'])
-    target=o['beacon'] if bot['cargo'] else min(o['nodes'],key=distance)
-    dx=sign(target['x']-bot['x']);dz=0 if dx else sign(target['z']-bot['z'])
-    slot=1;activate=distance(target)<=1
-    if o['hazard']['x']==bot['x'] and o['hazard']['activeUntil']>o['tick'] and o['hazard']['warnUntil']-o['tick']<12:
-        dx=1 if bot['x']<12 else -1;dz=0;slot=2;activate=True
-    elif distance(target)>4 and bot['cooldowns'][1]==0:
-        slot=2;activate=True
-    print(json.dumps({'type':'action','action':{'seq':o['tick'],'observedTick':o['tick'],'dx':dx,'dz':dz,'slot':slot,'activate':activate}}),flush=True)
+    if message.get('type')!='observation':continue
+    o=message['observation'];b=o['self'];tick=o['tick']
+    distance=lambda p:abs(p['x']-b['x'])+abs(p['z']-b['z'])
+    target=o['beacon'] if b['cargo'] else min(o['nodes'],key=distance)
+    sign=lambda x:(x>0)-(x<0)
+    dx=sign(target['x']-b['x']);dz=0 if dx else sign(target['z']-b['z']);activate=distance(target)<=1;slot=1
+    if b.get('depositUntil',0)>tick or b.get('pulseUntil',0)>tick:dx=dz=0;activate=False
+    elif b['cargo'] and distance(o['beacon'])<=1:dx=dz=0;activate=True
+    elif distance(target)>4 and b['cooldowns'][1]==0:slot=2;activate=True
+    print(json.dumps({'type':'action','action':{'seq':tick,'observedTick':tick,'dx':dx,'dz':dz,'slot':slot,'activate':activate}}),flush=True)

@@ -1,12 +1,9 @@
-# Build a Dreamweaver bot
+# Building a Dreamweaver bot
 
-Read README.md, PROTOCOL.md and the observation fixture before editing.
-
-- Develop one strategy in `bot.mjs` or the selected Python entrypoint. Preserve the manifest protocol/runtime.
-- Keep stdout as one JSON protocol message per line. Use stderr for diagnostics.
-- Keep consuming observations while waiting for model responses. Check the current tick before applying a delayed decision; always have a local fallback.
-- Respect walls, cooldowns, movement cadence, flux and health. Do not assume a successful action just because it was sent.
-- Run `npm run check`, then use the CLI to submit an explicitly requested tag and inspect a practice result. A local protocol check is not a gameplay test.
-- The participant runtime has no network or credentials. Never add keys, tokens, `.env`, a Docker dependency or machine paths to the repository.
-- Read `DREAMWEAVER_TOKEN` only in development/submission tooling. Never print it.
-- Do not select the final competition revision without the team's instruction. Push, import, practice and select are separate operations.
+- Read observations from stdin as JSON lines. Emit `{ "type": "action", "action": ... }` on stdout. Diagnostics go to stderr.
+- Preserve `seq` (increasing) and `observedTick`. Actions older than 20 game ticks expire.
+- Choose movement dx/dz in -1..1, slot 1..5 and activate boolean. Cardinal movement only; when both axes are set x wins.
+- Keep processing observations during slow model requests. Emit `{ "type":"model", "requestId":"...", "state": ..., "questions": ... }` to the broker. Responses arrive as `model-response`; handle errors without stopping.
+- Never require organizer credentials. Sandbox networking is disabled. Prototype: Node 24 standard library or Python 3.12 standard library; prebundle other code. No install scripts run.
+- One bot per team. Make strategy, pathfinding and memory your own. Do not attempt to access host files or other teams.
+- Commit the manifest and lockfile. A submission tag is resolved to an immutable source archive before competition lock.
