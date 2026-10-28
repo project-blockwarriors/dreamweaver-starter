@@ -2,7 +2,7 @@
 
 Your submission is a complete agent program: strategy, memory, prompts, model scheduling, movement and fallbacks. This template is a starting point, not a fixed set of behaviors. Add skills, replace the controller, or write your own architecture.
 
-One bot plays against the house. Collect crystals, carry up to three, then bank at the shrine: 1/2/3 crystals score 10/20/40. Banking takes 1.2 seconds of standing still. Damage earns no points. [Learn the game](https://mcpanel.blockwarriors.ai/dreamweaver/#Guide).
+One bot plays against the house. Collect crystals, carry up to three, then bank at the shrine: 1/2/3 crystals score 10/20/35. Four flank sources give two crystals and refill 8 seconds after harvest. The north cache gives three, opens at 15 seconds, and refills 45 seconds after harvest. The bank is in the center. Banking takes 1.2 seconds of standing still. Damage earns no points. [Learn the game](https://mcpanel.blockwarriors.ai/dreamweaver/#Guide).
 
 ## Start
 
@@ -29,7 +29,7 @@ npm run check
 | `types.ts` | Observation and action fields |
 | `tests/` | Delayed/error responses, plan validation, defense, resets and evaluation recovery |
 
-Start with a hypothesis: “bank two crystals when an attacker is nearby,” “race for the core only when we arrive first,” or “intercept only if stolen cargo is worth the detour.” Add a test, change one module, and compare results. Skills can use any legal movement/ability action; you are not limited to the reference choices. The highest-valued current skill is the fallback when no valid model choice is available.
+Start with a hypothesis: “bank two crystals when an attacker is nearby,” “race for the cache only when we arrive first,” or “intercept only if stolen cargo is worth the detour.” Add a test, change one module, and compare results. Skills can use any legal movement/ability action; you are not limited to the reference choices. The highest-valued current skill is the fallback when no valid model choice is available.
 
 `agent/config.ts` defaults to `mode: 'scripted'` (no model calls). Use `scripted` to measure your code alone, or `hybrid` for a slow Claude planner alongside Jev. Commit this setting; hosted games do not receive your development shell variables. The planner chooses a short-lived goal, stance and banking threshold; Jev chooses a current skill; code handles danger and movement. Claude availability and model selection belong to the organizer. If either provider is unavailable, the local policy keeps playing.
 

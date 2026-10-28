@@ -2,6 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { Harness } from '../agent/harness.ts';
+import { execute, question } from '../tactical.ts';
 import { config } from '../agent/config.ts';
 const fixture = JSON.parse(
   readFileSync(new URL('../fixtures/observation.json', import.meta.url), 'utf8'),
@@ -122,7 +123,7 @@ test('endgame banks partial loads and a running channel is not interrupted by st
   const o = obs(3540);
   o.self.cargo = 1;
   o.self.x = 12;
-  o.self.z = 9;
+  o.self.z = o.beacon.z + 1;
   const h = new Harness(settings('scripted'));
   const result = h.step(o);
   assert.match(h.memory.selected, /bank/);
@@ -144,4 +145,21 @@ test('route commitment prevents model jitter but cargo changes release the inten
   h.step(loaded);
   assert.match(h.memory.selected, /bank/);
   assert.equal(h.intent, null);
+});
+
+test('0.6 motor collects two-crystal flank supplies and prompts use the observed bonus', () => {
+  const o = obs(100);
+  o.self.x = 4;
+  o.self.z = 5;
+  o.self.cargo = 0;
+  const a = execute(o, 'collect');
+  assert.equal(a.activate, true);
+  assert.equal(a.dx, 0);
+  assert.equal(a.dz, 0);
+  o.self.cargo = 2;
+  assert.match(question(o).questions.tactic.criteria.bank, /10\/20\/35/);
+  const h = new Harness(settings('jev'), () => 0);
+  const r = h.step(o).requests[0] as any;
+  assert.match(r.questions.skill.instructions, /10\/20\/35/);
+  assert.doesNotMatch(r.questions.skill.instructions, /10\/20\/40/);
 });
