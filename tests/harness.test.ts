@@ -163,3 +163,16 @@ test('0.6 motor collects two-crystal flank supplies and prompts use the observed
   assert.match(r.questions.skill.instructions, /10\/20\/35/);
   assert.doesNotMatch(r.questions.skill.instructions, /10\/20\/40/);
 });
+
+test('short native matches return two crystals before the last crossing becomes too late', () => {
+  const o = obs(840);
+  o.duration = 1200;
+  o.self.x = 4;
+  o.self.z = 20;
+  o.self.cargo = 2;
+  const h = new Harness(settings('jev'), () => 0);
+  const result = h.step(o);
+  assert.equal(h.memory.selected, 'bank before timeout');
+  assert.equal(result.requests.length, 0);
+  assert.ok(result.action.dx > 0 || result.action.dz < 0);
+});

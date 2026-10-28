@@ -2,7 +2,7 @@
 export const config = {
   mode: 'scripted' as 'scripted' | 'jev' | 'hybrid',
   style: 'adaptive' as 'adaptive' | 'collector' | 'raider',
-  bankAt: 3,
+  bankAt: 2,
   commitmentTicks: 40,
   jev: { intervalTicks: 10, maxCalls: 300, timeoutMs: 800, maxAgeTicks: 16, choiceTicks: 20 },
   planner: { intervalTicks: 200, maxCalls: 12, timeoutMs: 8000, maxAgeTicks: 160, planTicks: 200 },

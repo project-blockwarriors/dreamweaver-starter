@@ -27,7 +27,7 @@ export function reflex(o: Observation): { action: Action; reason: string } | nul
   if ((o.self.respawnUntil ?? 0) > o.tick) return { action: execute(o, 'bank'), reason: 'respawning' };
   if ((o.self.depositUntil ?? 0) > o.tick) return { action: execute(o, 'bank'), reason: 'finish delivery' };
   if ((o.self.pulseUntil ?? 0) > o.tick) return { action: execute(o, 'intercept'), reason: 'finish disrupt' };
-  if (o.self.cargo > 0 && (o.self.cargo === 3 || o.duration - o.tick < distance(o.self, o.beacon) * 12 + 100))
+  if (o.self.cargo > 0 && (o.self.cargo === 3 || o.duration - o.tick < distance(o.self, o.beacon) * 20 + 100))
     return { action: execute(o, 'bank'), reason: 'bank before timeout' };
   return null;
 }
