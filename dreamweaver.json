@@ -1,1 +1,6 @@
-{ "protocol": "dreamweaver.v4", "runtime": "node24", "name": "Courier starter", "entrypoint": "bot.mjs" }
+{
+  "protocol": "dreamweaver.v4",
+  "runtime": "node24",
+  "entrypoint": "bot.ts",
+  "name": "Dream Relay agent"
+}
