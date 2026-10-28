@@ -29,6 +29,8 @@ npm run check
 | `types.ts` | Observation and action fields |
 | `tests/` | Delayed/error responses, plan validation, defense, resets and evaluation recovery |
 
+The default banks after two crystals, matching one flank harvest. Set `bankAt: 3` to experiment with full loads. The endgame reflex reserves one second per return cell plus five seconds for the channel and delays; adjust it only after measuring native movement.
+
 Start with a hypothesis: “bank two crystals when an attacker is nearby,” “race for the cache only when we arrive first,” or “intercept only if stolen cargo is worth the detour.” Add a test, change one module, and compare results. Skills can use any legal movement/ability action; you are not limited to the reference choices. The highest-valued current skill is the fallback when no valid model choice is available.
 
 `agent/config.ts` defaults to `mode: 'scripted'` (no model calls). Use `scripted` to measure your code alone, or `hybrid` for a slow Claude planner alongside Jev. Commit this setting; hosted games do not receive your development shell variables. The planner chooses a short-lived goal, stance and banking threshold; Jev chooses a current skill; code handles danger and movement. Claude availability and model selection belong to the organizer. If either provider is unavailable, the local policy keeps playing.
