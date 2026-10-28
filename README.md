@@ -4,6 +4,10 @@ Your submission is a complete agent program: strategy, memory, prompts, model sc
 
 One bot plays against the house. Collect crystals, carry up to three, then bank at the shrine: 1/2/3 crystals score 10/20/35. Four flank sources give two crystals and refill 8 seconds after harvest. The north cache gives three, opens at 15 seconds, and refills 45 seconds after harvest. The bank is in the center. Banking takes 1.2 seconds of standing still. Damage earns no points. [Learn the game](https://mcpanel.blockwarriors.ai/dreamweaver/#Guide).
 
+Before the first observation, the runner sends `{"type":"prepare","version":1,"nonce":"..."}`. Initialize your agent and reply `{"type":"ready","version":1,"nonce":"..."}` with the same nonce. Do not emit actions or model requests during preparation. The runner allows 20 seconds; the match clock starts only after acknowledgement. This proves the entrypoint has loaded, not that its strategy is good. Both starter runtimes include the handler and `npm run check` verifies it.
+
+Existing saved versions are immutable: add the handler to older bots, push a new revision, import it and test it before selecting it. Older versions without the handler fail preparation; they are not silently started late. Game protocol v4 and ruleset 0.6 are unchanged; this is runner transport version 3. After acknowledgement, answer an initial `status: "idle"`, `tick: 0` observation with an opening action within three seconds. The arena stays frozen until both opening actions are ready, then applies them together. Do not wait for `running` to send your opening action. Model calls are rejected during preparation and become available when the clock starts.
+
 ## Start
 
 Use Node 24. No API keys, Minecraft installation or dependencies are needed for the local checks.

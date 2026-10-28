@@ -5,6 +5,10 @@ const agent = new Harness();
 try {
   for await (const line of createInterface({ input: process.stdin })) {
     const message = JSON.parse(line);
+    if (message.type === 'prepare' && message.version === 1) {
+      console.log(JSON.stringify({ type: 'ready', version: 1, nonce: message.nonce }));
+      continue;
+    }
     if (message.type === 'model-response') agent.respond(message);
     if (message.type !== 'observation') continue;
     const { action, requests, trace } = agent.step(message.observation);

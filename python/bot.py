@@ -1,6 +1,9 @@
 import json,sys
 for line in sys.stdin:
     message=json.loads(line)
+    if message.get('type')=='prepare' and message.get('version')==1:
+        print(json.dumps({'type':'ready','version':1,'nonce':message['nonce']}),flush=True)
+        continue
     if message.get('type')!='observation':continue
     o=message['observation'];b=o['self'];tick=o['tick']
     distance=lambda p:abs(p['x']-b['x'])+abs(p['z']-b['z'])
