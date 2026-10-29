@@ -9,7 +9,8 @@
     "start": "node bot.ts",
     "test": "node --test tests/*.test.ts tests/*.test.mjs",
     "practice": "node tools/dreamweaver.ts",
-    "review": "node tools/review.mjs"
+    "review": "node tools/review.mjs",
+    "submission": "node tools/submission.mjs"
   },
   "engines": {
     "node": ">=24.0.0 <25"

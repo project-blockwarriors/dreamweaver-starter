@@ -8,6 +8,23 @@ Before the first observation, the runner sends `{"type":"prepare","version":1,"n
 
 Existing saved versions are immutable: add the handler to older bots, push a new revision, import it and test it before selecting it. Older versions without the handler fail preparation; they are not silently started late. Game protocol v4 and ruleset 0.6 are unchanged; this is runner transport version 3. After acknowledgement, answer an initial `status: "idle"`, `tick: 0` observation with an opening action within three seconds. The arena stays frozen until both opening actions are ready, then applies them together. Do not wait for `running` to send your opening action. Model calls are rejected during preparation and become available when the clock starts.
 
+## Choose your starting point
+
+- **Small controller:** set `entrypoint` in `dreamweaver.json` to `simple.ts`. Edit its `decide(observation)` function. It uses an editable movement helper and no model. This is the shortest way to understand the loop.
+- **Jev agent:** keep `bot.ts`. Start in `agent/strategy.ts` and `agent/config.ts`; expand into prompts, memory and scheduling as needed.
+- **Your own harness:** point `entrypoint` at your program. Keep the readiness and JSON-lines contract. You may replace every strategy module; matching the starter's architecture is not required.
+
+## Your first submission
+
+1. Run `npm ci --ignore-scripts` and `npm run check`.
+2. Change one decision, then check again.
+3. Commit it. Run `npm run submission -- HEAD` to inspect the **committed** files without executing them. Uncommitted edits are not submitted.
+4. Push the printed SHA or a tag that points to it, then import that revision in **My team → Bot → Add version**.
+5. Run a practice match, open its replay, and inspect one mistake. Change the decision and repeat on the same conditions.
+6. When satisfied, the captain clicks **Save entry** for that tested version. A push, import or practice result alone does not enter the competition.
+
+The artifact is your whole repository snapshot: code, prompts, configuration, static data, manifest and lockfile. Provider keys and development tokens stay outside it. Runtime dependencies must be bundled into committed source; the server does not run `npm install` or build scripts. The packaging check is not a secret scanner or a substitute for hosted practice.
+
 ## Start
 
 Use Node 24. No API keys, Minecraft installation or dependencies are needed for the local checks.
