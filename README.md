@@ -25,6 +25,10 @@ Existing saved versions are immutable: add the handler to older bots, push a new
 
 The artifact is your whole repository snapshot: code, prompts, configuration, static data, manifest and lockfile. Provider keys and development tokens stay outside it. Runtime dependencies must be bundled into committed source; the server does not run `npm install` or build scripts. The packaging check is not a secret scanner or a substitute for hosted practice.
 
+Run the check from the repository root. Required files must also survive `git archive`: the check rejects `.gitattributes` rules that exclude the manifest, entrypoint or runtime files. Optional development files may still use `export-ignore`.
+
+The receipt includes a SHA-256 of the local Git archive; it is not the GitHub download digest shown after import. Use the commit SHA to identify the revision across those steps.
+
 ## Start
 
 Use Node 24. No API keys, Minecraft installation or dependencies are needed for the local checks.
